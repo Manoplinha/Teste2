@@ -1,0 +1,5 @@
+<apex:page standardController="Quote" docType="html-5.0" title="Proposta Comercial: {!quote.Name}">
+
+   <webm:WebmergeWizard record="{!Quote}" />
+
+</apex:page>
