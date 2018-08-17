@@ -1,5 +1,0 @@
-<apex:page controller="webm.WebmergeController" title="Webmerge Objects" tabStyle="Webmerge_Settings__tab">
-
-	<!-- Deprecated -->
-
-</apex:page>

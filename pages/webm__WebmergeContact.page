@@ -1,5 +1,0 @@
-<apex:page standardController="Contact" docType="html-5.0" title="Webmerge Contact: {!contact.Name}">
-
-	<c:WebmergeWizard record="{!contact}" />
-	
-</apex:page>
