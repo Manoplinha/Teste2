@@ -1262,25 +1262,6 @@
         <errorMessage>A oportunidade só pode ser enviada para integração se estiver aprovada.</errorMessage>
     </validationRules>
     <webLinks>
-        <fullName>HTPPV__Printable_View</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <hasMenubar>false</hasMenubar>
-        <hasScrollbars>true</hasScrollbars>
-        <hasToolbar>false</hasToolbar>
-        <height>600</height>
-        <isResizable>true</isResizable>
-        <linkType>url</linkType>
-        <masterLabel>Printable View</masterLabel>
-        <openType>newWindow</openType>
-        <position>none</position>
-        <protected>false</protected>
-        <showsLocation>false</showsLocation>
-        <showsStatus>false</showsStatus>
-        <url>/apex/HTPPV__PrintableView?id={!Opportunity.Id}</url>
-    </webLinks>
-    <webLinks>
         <fullName>Nova_CotacaoJS</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
@@ -1306,15 +1287,5 @@ retURL = retURL + &apos;apex/TW1_Ancar_Venda_NovaCotacaoVF?TipoChamada=&apos;+&a
 window.location.href = retURL;
 }</url>
     </webLinks>
-    <webLinks>
-        <fullName>webm__Webmerge</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>Webmerge</masterLabel>
-        <openType>sidebar</openType>
-        <page>webm__WebmergeOpportunity</page>
-        <protected>false</protected>
-    </webLinks>
+    
 </CustomObject>
