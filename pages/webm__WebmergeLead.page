@@ -1,0 +1,5 @@
+<apex:page standardController="Lead" docType="html-5.0" title="Webmerge Lead: {!lead.Name}">
+	
+	<c:WebmergeWizard record="{!lead}" />
+
+</apex:page>

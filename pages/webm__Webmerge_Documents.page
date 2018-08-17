@@ -1,0 +1,33 @@
+<apex:page controller="webm.DocumentController" title="Webmerge Documents" sidebar="false">
+
+	<apex:stylesheet value="{!$Resource.webm__vfbootstrap}"/>
+	
+	<div id = "force">
+		<div class="container-fluid">
+		
+			<div class = "row">		
+				<apex:outputPanel rendered="{!IF(loggedIn == false && webmerge.credentialsExpired == false, true, false)}">
+					<div class="alert alert-danger">
+				      <strong>Uh oh!</strong> You're not logged in to Webmerge. <apex:outputLink value="/apex/Webmerge_Settings">Enter your API Keys to get started</apex:outputLink>
+				    </div>
+				</apex:outputPanel>
+				<apex:outputPanel rendered="{!webmerge.credentialsExpired}">
+					<div class="alert alert-danger">
+						<apex:form >
+				      		It looks like your API credentials are no longer valid. <apex:commandLink value="Log out and re-enter your API keys" action="{!webmerge.resetCreds}" />
+				     	</apex:form>
+				    </div>
+				</apex:outputPanel>
+				<apex:outputPanel rendered="{!loggedIn}">
+					<apex:iframe src="{!authedURL}" scrolling="true" id="webmergeFrame"/>
+					<apex:outputPanel rendered="{!if(credentials.webm__Type__c == 'free', true, false)}">
+    					<div class="alert alert-info">
+    						You are currently using a Trial of WebMerge. Please <apex:outputLink value="https://www.webmerge.me/manage/account?page=billing" target="_blank">click here</apex:outputLink> to upgrade.
+    					</div>
+					</apex:outputPanel>
+				</apex:outputPanel>
+			</div>
+		</div>
+	</div>
+
+</apex:page>

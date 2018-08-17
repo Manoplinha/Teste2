@@ -1,0 +1,172 @@
+<apex:page controller="webm.MappingController" title="Webmerge Mappings" readOnly="false">
+
+	<!-- <apex:stylesheet value="{!$Resource.vfbootstrap}"/> -->
+	<apex:stylesheet value="{!URLFOR($Resource.webm__SLDS080, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
+	
+	<style>
+		.documentName {
+			font-weight:bold;
+		}
+			
+		.meta {
+	    	font-size:0.8em;
+	    	color:#999;
+	    	white-space:normal;
+	    }
+	    
+	    .slds .slds-table td {
+			white-space: normal !important;
+		}
+		
+		.slds img {
+			max-width:100px;
+		}
+	</style>
+	
+	<apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+	<apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" />
+	
+	<div class="slds">
+		<div class="slds-grid">
+			<div class="slds-col">
+				
+				<apex:outputPanel rendered="{!IF(loggedIn == false && webmerge.credentialsExpired == false, true, false)}">
+					<h3>Webmerge Mappings</h3>
+					<div role="alert" class="slds-notify slds-notify--alert slds-theme--error slds-theme--alert-texture">
+						<span class="slds-assistive-text">Error</span>
+						<h2>
+							<span><strong>Uh oh!</strong> You're not logged in to Webmerge. <apex:outputLink value="/apex/Webmerge_Settings">Enter your API Keys to get started</apex:outputLink></span>
+						</h2>
+					</div>
+				</apex:outputPanel>
+				<apex:outputPanel rendered="{!webmerge.credentialsExpired}">
+					<h3>Webmerge Mappings</h3>
+				    <div role="alert" class="slds-notify slds-notify--alert slds-theme--error slds-theme--alert-texture">
+						<span class="slds-assistive-text">Error</span>
+						<h2>
+							<apex:form >
+				      			It looks like your API credentials are no longer valid. <apex:commandLink value="Log out and re-enter your API keys" action="{!webmerge.resetCreds}" />
+				     		</apex:form>
+						</h2>
+					</div>
+				</apex:outputPanel>
+				<apex:outputPanel rendered="{!loggedIn}">
+					<div class="slds-page-header">
+					  <div class="slds-grid">
+					    <div class="slds-col">
+					      <div class="slds-media">
+					        <div class="slds-media__figure">
+					          <img src="https://www.webmerge.me/images/icon.png" style="max-height:50px;" />
+					        </div>
+					        <div class="slds-media__body">
+					          <p class="slds-text-heading--label">WebMerge</p>
+					          <div class="slds-grid">				            
+					            <h1 class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+					            	WebMerge Mappings
+					           	</h1>
+					          </div>
+					        </div>
+					      </div>
+					    </div>
+					    <div class="slds-col">
+					    	<apex:outputLink value="/apex/New_Mapping" styleClass="slds-button slds-button--brand slds-float--right"><i class="fa fa-plus"></i> New Webmerge Mapping</apex:outputLink>
+					    </div>
+					  </div>
+					</div>
+					<br />
+					<apex:outputPanel rendered="{!IF(moreResults || searchText != null, true, false)}">
+					  <apex:form >
+						<div class="search-bar" style="text-align:right;">
+							<table class="table slds-table" style="width:300px;" align="right">
+                                 	<tr>
+                                 	  <td>
+	   								<input type="text" value="{!searchText}" name="searchText" class="slds-input" placeholder="Search..." maxlength="80" />
+	   							  </td>
+	   							  <td>
+	   							    <apex:commandButton action="{!search}" value="Go" styleClass="slds-button slds-button--brand slds-float--right" />
+	   							  </td>
+	   							</tr>
+	   						</table>
+						</div>
+						<br clear="all" />
+					  </apex:form>
+					</apex:outputPanel>
+					<apex:outputPanel rendered="{!if(webmergeMappings.size > 0, true, false)}">
+						<apex:form >
+							<div class = "table-responsive">
+								<table class = "slds-table slds-table--bordered">
+									<thead>
+										<tr class="slds-text-heading--label">
+											<th width="30">&nbsp;</th>
+											<th>Mapping Name</th>
+											<th>Salesforce Object</th>
+											<th>Webmerge Resource</th>
+											<th>Active</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<apex:repeat value="{!webmergeMappings}" var="mapping">
+											<tr>
+												<td>
+													<span class="docIcon">
+														<apex:commandLink action="{!goToMapping}"><apex:param value="{!mapping.Id}" name="mappingId" /><img src="https://www.webmerge.me/images/icon-{!mapping.Webmerge_Document_Type__c}.png" style="max-height:40px" /></apex:commandLink>
+													</span>
+												</td>
+												<td>
+													<div><strong class = "documentName"><apex:commandLink value="{!mapping.Name}" action="{!goToMapping}"><apex:param value="{!mapping.Id}" name="mappingId" /></apex:commandLink></strong></div>
+													<div class="meta"><apex:outputField value="{!mapping.webm__Description__c}" /></div>
+												</td>
+												<td>
+													<apex:outputField value="{!mapping.webm__Salesforce_Object_Name__c}" />
+												</td>
+												<td>
+													<div><apex:outputField value="{!mapping.webm__Webmerge_Document_Name__c}" /></div>
+													<div class="meta"><apex:outputField value="{!mapping.webm__Resource__c}" /></div>
+												</td>
+												<td>
+													<apex:outputField value="{!mapping.webm__Active__c}" />
+												</td>
+												<td>
+													<apex:commandLink style="text-decoration: underline;" value="Edit" action="{!goToMapping}"><apex:param value="{!mapping.Id}" name="mappingId" /></apex:commandLink><br />
+													<apex:commandLink style="text-decoration: underline;" value="{!IF(mapping.webm__Active__c = true, 'Deactivate', 'Activate')}" action="{!toggleActivation}" ><apex:param value="{!mapping.Id}" name="mappingId" /></apex:commandLink><br />
+													<apex:commandLink style="text-decoration: underline;" value="Copy" action="{!duplicateMapping}" onclick="if(!confirm('Are you sure?')){ e.preventDefault(); };"><apex:param name="mappingId" value="{!mapping.Id}"/></apex:commandLink><br />
+													<apex:commandLink style="text-decoration: underline;" value="Delete" action="{!deleteMapping}" onclick="if(!confirm('Are you sure?')){ e.preventDefault(); };"><apex:param name="mappingId" value="{!mapping.Id}"/></apex:commandLink>	
+												</td>
+											</tr>
+										</apex:repeat>
+									</tbody>
+								</table>
+							</div>
+						</apex:form>
+						<apex:outputPanel rendered="{!if(credentials.webm__Type__c == 'free', true, false)}">
+	    					<div role="alert" class="slds-notify slds-notify--alert slds-theme--alert-texture">
+								<span class="slds-assistive-text">Error</span>
+								<h2>
+									<span>You are currently using a Trial of WebMerge. Please  <apex:outputLink value="https://www.webmerge.me/manage/account?page=billing" target="_blank">click here</apex:outputLink> to upgrade.</span>
+								</h2>
+							</div>
+	    				</apex:outputPanel>
+					</apex:outputPanel>
+					<apex:outputPanel rendered="{!if(webmergeMappings.size == 0 && searchText == null, true, false)}">
+						<div role="alert" class="slds-notify slds-notify--alert slds-theme--alert-texture">
+							<span class="slds-assistive-text">Error</span>
+							<h2>
+								<span>You don't have any Webmerge mappings yet.</span>
+							</h2>
+						</div>
+					</apex:outputPanel>
+					<apex:outputPanel rendered="{!if(webmergeMappings.size == 0 && searchText != null, true, false)}">
+						<div role="alert" class="slds-notify slds-notify--alert slds-theme--alert-texture">
+							<span class="slds-assistive-text">Error</span>
+							<h2>
+								<span>Your search didn't return any Mappings.</span>
+							</h2>
+						</div>
+					</apex:outputPanel>
+				</apex:outputPanel>
+			</div>	
+		</div>
+	</div>
+	
+</apex:page>

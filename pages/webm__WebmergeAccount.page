@@ -1,0 +1,5 @@
+<apex:page standardController="Account" docType="html-5.0" title="Webmerge Account: {!account.Name}">
+
+	<c:WebmergeWizard record="{!account}" />
+
+</apex:page>

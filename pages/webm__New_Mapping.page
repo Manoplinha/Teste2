@@ -1,0 +1,131 @@
+<apex:page standardController="webm__Webmerge_Mapping__c" extensions="webm.WebmergeMappingExtension" title="New Webmerge Mapping" readOnly="false">
+
+	<!-- <apex:stylesheet value="{!$Resource.vfbootstrap}"/> -->
+	<apex:stylesheet value="{!URLFOR($Resource.webm__SLDS080, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
+	    
+	<style> 
+		
+	.slds-form-element {
+		margin-bottom: 1.5em;
+	}
+	
+	.radio-table {
+		width:auto !important;
+	}
+	
+	.radio-table td {
+		padding: .5em;
+	}
+	
+	</style>
+	
+	<div class="slds">
+		<div class="slds-page-header">
+		  <div class="slds-grid">
+		    <div class="slds-col slds-has-flexi-truncate">
+		      <div class="slds-media">
+		        <div class="slds-media__figure">
+		          <img src="https://www.webmerge.me/images/icon.png" style="max-height:50px;" />
+		        </div>
+		        <div class="slds-media__body">
+		          <p class="slds-text-heading--label">WebMerge</p>
+		          <div class="slds-grid">				            
+		            <h1 class="slds-text-heading--medium slds-m-right--small slds-truncate slds-align-middle">
+		            	New Mapping
+		           	</h1>
+		          </div>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<apex:outputPanel rendered="{!NOT(loggedIn)}">
+			<div class = "slds-grid slds-col--padded">
+				<div role="alert" class="slds-notify slds-notify--alert slds-theme--error slds-theme--alert-texture">
+					<span class="slds-assistive-text">Error</span>
+					<h2>
+						<span><strong>Uh oh!</strong> You're not logged in to Webmerge. <apex:outputLink value="/apex/Webmerge_Settings">Enter your API Keys to get started</apex:outputLink></span>
+					</h2>
+				</div>
+		    </div>
+		</apex:outputPanel>
+
+	
+		<apex:outputPanel rendered="{!loggedIn}">
+			<apex:outputPanel id="errorMessage">
+				<apex:outputPanel rendered="{!requiredError}">
+				  <div class="slds-grid slds-col--padded">
+				    <div role="alert" class="slds-notify slds-notify--alert slds-theme--error slds-theme--alert-texture">
+						<span class="slds-assistive-text">Error</span>
+						<h2>
+							<span>Please set all required fields in order to continue.</span>
+						</h2>
+					</div>
+				  </div>
+				</apex:outputPanel>
+			</apex:outputPanel>
+			<apex:form styleClass="slds-form--stacked slds-wrap slds-m-top--large" >
+			<div class = "slds-grid slds-col--padded">
+				<div class = "slds-large-size--8-of-12">					
+					<div class="slds-form-element">
+   						<label class="slds-form-element__label">Mapping Name <span style = "color: red">*</span></label>
+   						<div class="slds-form-element__control">
+   							<apex:inputField value="{!webm__Webmerge_Mapping__c.Name}" styleClass="slds-input" html-placeholder="Mapping Name" html-maxlength="80" />
+ 						</div>
+ 					</div> 	
+ 						
+ 					<div class="slds-form-element">
+   						<label class="slds-form-element__label">Description</label>
+   						<div class="slds-form-element__control">
+   							<apex:inputTextArea value="{!webm__Webmerge_Mapping__c.webm__Description__c}" styleClass="slds-textarea" html-placeholder="Mapping Description" html-maxlength="255"  />
+ 						</div>
+ 					</div>
+ 					
+ 					<div class="slds-form-element">
+   						<label class="slds-form-element__label">Salesforce Object <span style = "color: red">*</span></label><br />
+   						<div class="slds-form-element__control">
+	   						<apex:selectList value="{!webm__Webmerge_Mapping__c.webm__Salesforce_Object_Name__c}" size="1" styleClass="slds-select">
+	   							<apex:selectOptions value="{!supportedObjects}" />
+	   						</apex:selectList>
+   						</div>
+ 					</div>
+ 					
+ 					<div class = "slds-form-element">
+						<label class="slds-form-element__label">Select a Webmerge Resource <span style = "color: red">*</span></label>
+						<div class="slds-form-element__control">
+							<apex:selectRadio value="{!resourceType}" styleClass="radio-table">
+								<apex:selectOptions value="{!resourceRadioOptions}" />
+								<apex:actionSupport event="onchange" action="{!populateRemoteDocuments}" rerender="remoteDocumentContainer" status="loadingDocs"/>
+							</apex:selectRadio>
+							<apex:actionStatus id="loadingDocs" startText="Loading..." />
+						</div>
+					</div>
+ 						
+ 					<apex:outputPanel id="remoteDocumentContainer">
+ 					<div class = "slds-form-element">
+						<label class="slds-form-element__label"><apex:outputText value="Select a Webmerge Document" rendered="{!IF(resourceType == 'Document', true, false)}" /> <apex:outputText value="Select a Webmerge Route" rendered="{!IF(resourceType == 'Route', true, false)}" /> <span style = "color: red">*</span></label><br />
+						<div class="slds-form-element__control">
+							<apex:selectList value="{!webm__Webmerge_Mapping__c.webm__Webmerge_Document_Id__c}" size="1" styleClass="slds-select">
+								<apex:selectOptions value="{!remoteDocumentOptions}" />
+							</apex:selectList>
+						</div>
+					</div>
+					</apex:outputPanel>
+					
+				</div>
+			</div>
+				
+			<hr />
+						
+			<div class = "slds-grid slds-col--padded">
+				<div class = "slds-large-size--8-of-12">
+					<apex:commandButton value="Save and Next" action="{!saveMappingAndContinue}" rerender="errorMessage" style="margin-left: 15px" styleClass="slds-button slds-button--brand" />
+				</div> 
+			</div>	
+					
+			</apex:form>
+		</apex:outputPanel>
+	</div>
+	
+</apex:page>

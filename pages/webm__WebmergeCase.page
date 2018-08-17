@@ -1,0 +1,5 @@
+<apex:page standardController="Case" docType="html-5.0" title="Webmerge Case: {!case.CaseNumber}">
+
+	<c:WebmergeWizard record="{!case}" nameField="CaseNumber" />
+
+</apex:page>
